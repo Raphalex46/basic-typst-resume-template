@@ -20,7 +20,6 @@
   lang: "en",
   body,
 ) = {
-
   // Sets document metadata
   set document(author: author, title: author)
 
@@ -31,12 +30,12 @@
     size: font-size,
     lang: lang,
     // Disable ligatures so ATS systems do not get confused when parsing fonts.
-    ligatures: false
+    ligatures: false,
   )
 
   // Reccomended to have 0.5in margin on all sides
   set page(
-    margin: (0.5in),
+    margin: 0.5in,
     paper: paper,
   )
 
@@ -73,32 +72,45 @@
   [= #(author)]
 
   // Personal Info Helper
-  let contact-item(value, prefix: "", link-type: "") = {
+  let contact-item(value, prefix: "", emoji: [], link-type: "") = {
     if value != "" {
       if link-type != "" {
-        link(link-type + value)[#(prefix + value)]
+        box[#text(font: "Noto Emoji", fill: black)[#emoji] #link(link-type + value)[#(prefix + value)]]
       } else {
-        value
+        box[#text(font: "Noto Emoji", fill: black)[#emoji] #value]
       }
     }
   }
 
   // Personal Info
-  pad(
-    top: 0.25em,
+  grid(
+    columns: (1fr, 1fr, 1fr),
+    rows: auto,
     align(personal-info-position)[
       #{
         let items = (
           contact-item(pronouns),
-          contact-item(phone),
-          contact-item(location),
-          contact-item(email, link-type: "mailto:"),
-          contact-item(github, link-type: "https://"),
-          contact-item(linkedin, link-type: "https://"),
-          contact-item(personal-site, link-type: "https://"),
-          contact-item(orcid, prefix: [#orcid-icon(color: rgb("#AECD54"))orcid.org/], link-type: "https://orcid.org/"),
+          contact-item(location, emoji: emoji.pin.round),
+          contact-item(phone, emoji: emoji.phone.receiver),
+          contact-item(email, emoji: emoji.mail, link-type: "mailto:"),
         )
-        items.filter(x => x != none).join("  |  ")
+        items.filter(x => x != none).join()
+      }
+    ],
+    [],
+    align(left)[
+      #{
+        let items = (
+          contact-item(github, emoji: emoji.computer, link-type: "https://"),
+          contact-item(linkedin, link-type: "https://"),
+          contact-item(personal-site, emoji: emoji.globe.meridian, link-type: "https://"),
+          contact-item(
+            orcid,
+            prefix: [#orcid-icon(color: rgb("#AECD54"))orcid.org/],
+            link-type: "https://orcid.org/",
+          ),
+        )
+        items.filter(x => x != none).join()
       }
     ],
   )
@@ -194,7 +206,7 @@
       if role == "" {
         [*#name* #if url != "" and dates != "" [ (#link("https://" + url)[#url])]]
       } else {
-        [*#role*, #name #if url != "" and dates != ""  [ (#link("https://" + url)[#url])]]
+        [*#role*, #name #if url != "" and dates != "" [ (#link("https://" + url)[#url])]]
       }
     },
     right: {
