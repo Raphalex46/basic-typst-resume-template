@@ -13,6 +13,7 @@
   personal-site: "",
   orcid: "",
   accent-color: "#000000",
+  link-color: blue,
   font: "New Computer Modern",
   paper: "us-letter",
   author-font-size: 20pt,
@@ -55,7 +56,7 @@
   )
 
   show link: set text(
-    fill: rgb(accent-color),
+    fill: rgb(link-color)
   )
 
   // Name will be aligned left, bold and big
